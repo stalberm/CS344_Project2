@@ -28,10 +28,12 @@ int main(int argc, char *argv[]) {
     if (!(argc > 1)) {
         fd = 0;
         print(fd);
+        close(fd);
     } else {
         for(int i=1; i < argc; i++) {
             fd = open(argv[i], O_RDONLY);
             print(fd);
+            close(fd);
         }
     }
 }

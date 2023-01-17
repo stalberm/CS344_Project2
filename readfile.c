@@ -13,4 +13,5 @@ int main(int argc, char *argv[]) {
     int count;
     count = read(fd, buf, sizeof buf);
     write(1, buf, count);
+    close(fd);
 }
