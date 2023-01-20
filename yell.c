@@ -2,38 +2,46 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
+
+void my_print(int fd);
 
 int main(int argc, char *argv[]) {
 
     int fd;
-    char buf[2048];
-    int count;
-
-    void print(int fd) {
-        while(1) {
-            count = read(fd, buf, sizeof buf);
-            if (count == 0 || count == -1) {
-                break;
-            }
-            int i = 0;
-            while(buf[i]) {
-                char upper = toupper(buf[i]);
-                buf[i] = upper;
-                i++;
-            }
-            write(1, buf, count);
-        }
-    }
 
     if (!(argc > 1)) {
         fd = 0;
-        print(fd);
+        my_print(fd);
         close(fd);
     } else {
         for(int i=1; i < argc; i++) {
             fd = open(argv[i], O_RDONLY);
-            print(fd);
+            my_print(fd);
             close(fd);
         }
+    }
+}
+
+
+
+void my_print(int fd) {
+    char buf[2048];
+    int count;
+    while(1) {
+        count = read(fd, buf, sizeof buf);
+        if (count == 0) {
+            break;
+        } else if (count == -1) {
+            perror("Open");
+            exit(1);
+        }
+        int i = 0;
+        while(buf[i]) {
+            char upper = toupper(buf[i]);
+            buf[i] = upper;
+            i++;
+        }
+        write(1, buf, count);
     }
 }
